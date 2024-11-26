@@ -1,40 +1,52 @@
 /*
 Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
 
+	"log"
+	"os"
+
 	"github.com/spf13/cobra"
 )
 
-// packagesCmd represents the packages command
-var packagesCmd = &cobra.Command{
-	Use:   "packages",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+// url blackarch repository
+const REMOTE_REPO = "https://github.com/BlackArch/blackarch.git"
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+// local base directory for blackman
+var LOCAL_BLACKMAN string
+
+func getLocalBlackman() string {
+	dirname, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return dirname + "/.blackman"
+}
+
+func installPackage(packageName string) {
+	fmt.Println("Installing package: " + packageName)
+}
+
+var installCmd = &cobra.Command{
+	Use:   "install",
+	Short: "Install a package",
+	Long:  `Install a package from the Blackarch repository`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("packages called")
+		LOCAL_BLACKMAN = getLocalBlackman()
+		fmt.Println(LOCAL_BLACKMAN)
+		fmt.Println(args)
+		fmt.Println("install called")
+		for _, packageName := range args {
+			installPackage(packageName)
+		}
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(packagesCmd)
+	rootCmd.AddCommand(installCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// packagesCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// packagesCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	installCmd.Flags().BoolP("install", "i", false, "Install a package")
 }
