@@ -20,3 +20,8 @@ go.work
 
 # Build output directory
 bin/
+
+
+# Added by cargo
+
+/target
